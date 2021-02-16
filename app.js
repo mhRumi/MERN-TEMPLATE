@@ -15,7 +15,7 @@ if(process.env.NODE_ENV === 'development'){
 const userRoutes = require('./routes/userRoutes');
 app.use(express.static(`${__dirname}/public`))
 
-app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/users', userRoutes);
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

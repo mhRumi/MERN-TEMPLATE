@@ -68,6 +68,8 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+.vscode
+
 # dotenv environment variables file
 .env
 .env.test

@@ -14,6 +14,13 @@ const signToken = id => {
 
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
+    const cookieOptions = {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 1000 ),
+        httpOnly: true
+    }
+    res.cookie('jwt', token, cookieOptions);
+    if(process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+    user.password = undefined;
     res.status(statusCode).json({
        status: 'success',
        token,
@@ -56,18 +63,18 @@ exports.protect = catchAsync(async(req, res, next) => {
     if(!token){
         return next(new AppError('You are not logged in! Please login to get access.', 401));
     }
-    //token verification
+    
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-    //Check if user still exists
+   
     const currentUser = await User.findById(decoded.id);
     if(!currentUser){
         return next(new AppError('The user does not exists!', 401));
     }
-    // Check if user changed password after the token was issued
+   
     if(currentUser.changedPasswordAfter(decoded.iat)){
         return next(new AppError('User recently changed password! Please log in again', 401));
     }
-    //GRANT ACCESS TO PROTECTED ROUTE
+  
     req.user = currentUser;
     next();
 });

@@ -42,6 +42,11 @@ app.use(hpp({
 app.use(express.static(`${__dirname}/public`))
 
 app.use('/api/v1/users', userRoutes);
+// app.get('/', (req, res) => {
+//     res.json({
+//         message: "Hello"
+//     })
+// })
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

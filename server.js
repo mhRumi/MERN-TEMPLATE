@@ -3,14 +3,16 @@ const dotenv = require('dotenv').config();
 const app = require('./app');
 
 const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
+// const DB = "mongodb://rumi:pass@db:27017"
+
 mongoose.connect(DB, {
     useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
 
 }).then(() =>
-    console.log('DB Connection is succeessfull')
-);
+    console.log('DB Connection is succeessfull on ' + DB)
+).catch(err => {
+    console.log(err)
+});
 
 const port  = process.env.PORT ||  8000;
 app.listen(port, () => {
